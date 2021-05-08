@@ -1,4 +1,95 @@
+//Version 8/05/21
 import java.util.Scanner;
+
+public class BatailleNavale {
+    
+    public static void main(String[] args){
+        
+        Scanner sc = new Scanner(System.in);
+        
+        
+        //Initialisation : choix du mode jeu : JVJ, JVO ; placement bateaux
+        
+        byte typeJeu = 0;
+        byte typeMax = 2;
+        
+        do{
+            System.out.println("Joueur contre Ordinateur : 1 - Joueur contre Joueur : 2");
+            System.out.print("Votre choix : ");
+            typeJeu = sc.nextByte();
+        }while ((typeJeu <=0) || (typeJeu > typeMax));
+        
+        
+        //Création des joueurs
+        
+        Joueur[] tabJ = new Joueur[2];
+        Joueur j1 = new Joueur();
+        tabJ[0] = j1;
+        
+        Joueur j2;
+        if (typeJeu == 1){
+            j2 = new Joueur(false);
+        }else{ //remplacer par le type de jeu jvj si introduction jeu ordi
+            j2 = new Joueur();
+        }
+        
+        tabJ[1] = j2;
+        
+        
+        
+        /*boucle du jeu : Affichage des coups joués, nb bateaux restants à adversaire.
+        choix case à attaquer : check si déjà attaquée ou pas
+        */
+        
+        byte actuel = 1; // pour commencer par joueur 1 dans boucle
+        
+        if (typeJeu == 1){
+            actuel = 0; //comme ça pas besoin de changer de joueur1 dans la suite
+        }
+        
+        byte autre = (byte)((actuel + 1)%2);
+        boolean enCours = true;
+        
+        while (enCours){
+            
+            if (typeJeu != 1){
+                actuel = (byte)((actuel + 1)%2);
+                autre = (byte)((actuel + 1)%2);
+                System.out.print( actuel + autre);
+            }
+            
+            System.out.println("\n\n\n\n\n"+"Joueur " + (actuel+1));
+            
+            //Affichage bateau
+            tabJ[actuel].afficheCoups();
+            
+            //Affichage nb bateaux restants
+            System.out.println("\n" + "Il reste " + tabJ[autre].nbBateaux + " bateaux à trouver");
+            tabJ[actuel].Attaque(tabJ[autre]);
+            
+            enCours = tabJ[autre].fini();
+            
+            
+        }
+        
+        System.out.println("Le joueur " + (actuel+1) + " a gagné cette partie");
+        
+        
+        
+        
+    }
+    
+    
+    
+}
+
+
+
+
+
+
+//Version avant 8/05/21
+/*import java.util.Scanner;
 
 public class BatailleNavale {
     
@@ -13,7 +104,7 @@ public class BatailleNavale {
         
         //Initialisation : choix du mode jeu : JVJ, JVO ; placement bateaux
         
-        byte typeJeu = 0;
+/*        byte typeJeu = 0;
         byte typeMax = 2;
         do{
             System.out.println("Joueur contre Joueur : 1 - Joueur contre Ordinateur : 2");
@@ -41,7 +132,7 @@ public class BatailleNavale {
         choix case à attaquer : check si déjà attaquée ou pas
         */
         
-        byte ligne;
+  /*      byte ligne;
         byte colonne;
         
         while (true){
