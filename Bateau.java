@@ -84,6 +84,44 @@ public class Bateau {
         }
         
     }
+	public void placementOrdi (Joueur joueur) { // les infos seront générées aléatoirement
+        boolean sens = false; // true : vers haut ou vers droite
+        boolean estVertical = false; // true : est vertical
+        for(byte i = 1 ; i<=5 ; i++){
+            this.numero = i;
+            this.calculTaille(i);
+            do{
+                this.debutH = (int)(joueur.bateaux.length*Math.random());
+                this.debutV = (int)(joueur.bateaux[0].length*Math.random());
+                if (this.verifPlace1(joueur) == true) {
+                    int a = (int)(2*Math.random()); // donne 0 ou 1 aléatoirement
+                    if (a == 0) {
+                        sens = true;
+                    }
+                    int b = (int)(2*Math.random()); // donne 0 ou 1 aléatoirement
+                    if (b == 0) {
+                        estVertical = true;
+                    }
+                    if (estVertical == false) {
+                        this.finH = this.debutH;
+                        if (sens == true) {
+                            this.finV = this.debutV + taille - 1;
+                        } else {
+                            this.finV = this.debutV - taille + 1;
+                        }
+                    } else {
+                        this.finV = this.debutV;
+                        if (sens == true) {
+                            this.finH = this.debutH - taille + 1;
+                        } else {
+                            this.finH = this.debutH + taille - 1;
+                        }
+                    }
+                }
+            }while(this.verifPlace2(joueur) == false);
+            this.placer(joueur);
+        }
+    
     
     public void placer (Joueur joueur) {
         if (this.estVertical() == false) {
