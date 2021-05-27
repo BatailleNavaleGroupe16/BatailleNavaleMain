@@ -41,7 +41,7 @@ public class Bateau {
                     System.out.println("Veuillez saisir l'orientation de votre bateau : VERTICAL : 1 / HORIZONTAL : 2 ");
                     this.estVertical = sc.nextByte();
                 }while(this.estVertical != 1 || this.estVertical != 2);
-            }while(this.verifPlace(joueur));
+            }while(this.verifPlace3(joueur));
             
             this.placer(joueur);
     }
@@ -199,25 +199,7 @@ public class Bateau {
         }
         return verification;
     }
-    
-    public boolean verifPlace3 (Joueur joueur) {
-        boolean verification = true;
-        this.ordre();
-        if (this.debutH == this.finH) {
-            for (byte i = 0; i < this.taille; i++) {
-                if (joueur.bateaux[this.debutV+i][this.debutH] != 0) {
-                    verification = false;
-                }
-            }
-        } else {
-            for (byte i = 0; i < this.taille; i++) {
-                if (joueur.bateaux[this.debutV][this.debutH+i] != 0) {
-                    verification = false;
-                }
-            }
-        }
-        return verification;
-    }
+   
     
     public boolean sens(){
         if (this.debutH <= this.finH && this.debutV <= this.finV){
@@ -226,7 +208,7 @@ public class Bateau {
             return false;
         }
     }
-	public boolean verifPlace(Joueur joueur){//méthode utilisée pour le placement joueur 
+	public boolean verifPlace3(Joueur joueur){//méthode utilisée pour le placement joueur pas la même que verifPlace 3 avant car j'ai modifié
         byte i = 0;
         if(estVertical == 1){
             while(i < calculTaille(this.numero) && this.debutH - i < 0){//positionnement entre les bornes de la taille du bateau, vérif si bien dans le tableau de la grille
