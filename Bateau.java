@@ -4,13 +4,14 @@ import java.util.Scanner;
 
 public class Bateau {
 	
-	public int taille; //calculée automatiquement
-    public int debutH;
-    public int debutV;
-    public int finH;
-    public int finV;
-    public int fin;
+    public byte taille; //calculée automatiquement
+    public byte debutH;
+    public byte debutV;
+    public byte finH;
+    public byte finV;
+    public byte fin;
     public byte numero;
+    public byte estVertical; //1 pour vertical 2 pour horizontal
     Scanner sc = new Scanner(System.in);
     
     public Bateau (byte n) {
@@ -22,40 +23,36 @@ public class Bateau {
     
     public void placementJoueur (Joueur joueur) { // les infos seront directement rentrées par le joueur
         boolean orientation; 
-        for(byte i = 1 ; i<5 ; i++){
+        
             this.numero = i;
             this.calculTaille(i);
             do{
                 do{
-                    System.out.println("Veuillez saisir la ligne de la première position votre bateau n° : "+i);
-                    this.debutH = sc.nextInt();
-                }while(debutH < 1 || debutH > 10);//doit être dans la grille
+                    System.out.println("Veuillez saisir la ligne de la position la plus à droite et la plus en haut de votre bateau n° : "+i);
+                    this.debutH = sc.nextByte();
+                }while(debutH <= 1 || debutH >= 10);//doit être dans la grille
+                
                 do{
-                    System.out.println("Veuillez saisir la colonne de la première position votre bateau n° : "+i);
-                    this.debutV = sc.nextInt();
-                }while(debutV < 1 || debutV > 10);//doit être dans la grille
-            }while(this.verifPlace1(joueur) == false);
-            do{
+                    System.out.println("Veuillez saisir la colonne de la première la plus à droite et la plus en haut de votre bateau n° : "+i);
+                    this.debutV = sc.nextByte();
+                }while(debutV <= 1 || debutV >= 10);//doit être dans la grille
+                
                 do{
-                    System.out.println("Veuillez saisir la ligne de la dernière position votre bateau n° : "+i);
-                    this.finH = sc.nextInt();
-                }while(finH < 1 || finH > 10);//doit être dans la grille
-                do{
-                    System.out.println("Veuillez saisir la colonne de la dernière position votre bateau n° : "+i);
-                    this.finV = sc.nextInt();
-                }while(finV < 1 || finV > 10);//doit être dans la grille
-            }while(this.verifTaille() == false || this.verifPlace2(joueur) == false);//condition de suffisament de place avec cette orientation et aussi de position du bateau par rapport à sa taille
-            this.placer(joueur);//opération finale de placement 
-        }
+                    System.out.println("Veuillez saisir l'orientation de votre bateau : VERTICAL : 1 / HORIZONTAL : 2 ");
+                    this.estVertical = sc.nextByte();
+                }while(this.estVertical != 1 || this.estVertical != 2);
+            }while(this.verifPlace(joueur));
+            
+            this.placer(joueur);
     }
     
     public void placer (Joueur joueur) {
         if (this.estVertical() == true) {
-            for (int i = 0; i < this.taille; i++) {
+            for (byte i = 0; i < this.taille; i++) {
                 joueur.bateaux[this.debutV+i][this.debutH] = this.numero;//ERREUR INCOMPATIBILITE BYTE INT 
             }
         } else {
-            for (int i = 0; i < this.taille; i++) {
+            for (byte i = 0; i < this.taille; i++) {
                 joueur.bateaux[this.debutV][this.debutH+i] = this.numero;
             }
         }
@@ -66,14 +63,14 @@ public class Bateau {
         boolean estVertical = false; // true : est vertical
         this.calculTaille(this.numero);
         do{
-            this.debutH = (int)(joueur.bateaux.length*Math.random());
-            this.debutV = (int)(joueur.bateaux[0].length*Math.random());
+            this.debutH = (byte)(joueur.bateaux.length*Math.random());
+            this.debutV = (byte)(joueur.bateaux[0].length*Math.random());
             if (this.verifPlace1(joueur) == true) {
-                int a = (int)(2*Math.random()); // donne un sens aléatoire
+                byte a = (byte)(2*Math.random()); // donne un sens aléatoire
                 if (a == 0) {
                     sens = true;
                 }
-                int b = (int)(2*Math.random()); // donne une orientation aléatoire
+                byte b = (byte)(2*Math.random()); // donne une orientation aléatoire
                 if (b == 0) {
                     estVertical = true;
                 }
@@ -140,18 +137,18 @@ public class Bateau {
     
     public void ordre () {
         if (this.debutH > this.finH) {
-            int var = this.finH;
+            byte var = this.finH;
             this.finH = this.debutH;
             this.debutH = var;
         }
         if (this.debutV > this.finV) {
-            int var = this.finV;
+            byte var = this.finV;
             this.finV = this.debutV;
             this.debutV = var;
         }
     }
     
-    public int calculTaille(int numero){// calcul de la taille du bateau en fonction de son numéro
+    public byte calculTaille(byte numero){// calcul de la taille du bateau en fonction de son numéro
         if(numero == 1){
             this.taille = 2;
         }else if(numero == 2 || numero == 3){
@@ -207,13 +204,13 @@ public class Bateau {
         boolean verification = true;
         this.ordre();
         if (this.debutH == this.finH) {
-            for (int i = 0; i < this.taille; i++) {
+            for (byte i = 0; i < this.taille; i++) {
                 if (joueur.bateaux[this.debutV+i][this.debutH] != 0) {
                     verification = false;
                 }
             }
         } else {
-            for (int i = 0; i < this.taille; i++) {
+            for (byte i = 0; i < this.taille; i++) {
                 if (joueur.bateaux[this.debutV][this.debutH+i] != 0) {
                     verification = false;
                 }
@@ -227,6 +224,26 @@ public class Bateau {
             return true; // true : vers bas ou vers droite
         }else{
             return false;
+        }
+    }
+	public boolean verifPlace(Joueur joueur){//méthode utilisée pour le placement joueur 
+        byte i = 0;
+        if(estVertical == 1){
+            while(i < calculTaille(this.numero) && this.debutH - i < 0){//positionnement entre les bornes de la taille du bateau, vérif si bien dans le tableau de la grille
+                if(joueur.bateaux[this.debutH-i][this.debutV] == 0){
+                    return false;
+                }
+                i++;
+            }
+            return true;
+        }else{
+            while(i < calculTaille(this.numero) && this.debutH - i < 0){
+                if(joueur.bateaux[this.debutH][this.debutV-i] == 0){
+                    return false;
+                }
+                i++;
+            }
+            return true;
         }
     }
 }
